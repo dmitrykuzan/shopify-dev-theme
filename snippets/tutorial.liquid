@@ -1,0 +1,156 @@
+{% comment %} =-----------------Начальаня бутофория----------------= {% endcomment %}
+
+{% comment %} Условный оператор (короткий пример) toggle lalse {% endcomment %}
+{% assign undefined_variable = false %}
+
+{% if undefined_variable == true %}
+  <p>Hello conditial operator</p>
+{% endif %}
+{% comment %} Array {% endcomment %}
+
+{% comment %} Цикл тегов продукта {% endcomment %}
+{% for tag in product.tags %}
+  {{ tag }}
+  <br>
+{% endfor %}
+
+{% comment %} Обычное условие {% endcomment %}
+{% assign price_value = price_value | default: 0 %}
+
+{% assign price_value = 200 %}
+
+{% if price_value > 100 %}
+  <p>Цена больше 100</p>
+{% else %}
+  <p>Цена меньше или равна 100</p>
+{% endif %}
+{% comment %} Обычное условие {% endcomment %}
+
+{% comment %} Обычное условие внутри цикла {% endcomment %}
+<ul>
+  {% for variant in product.variants %}
+    {% assign price = variant.price | default: 0 | plus: 0 %}
+
+    <li>
+      {{ variant.title }} — {{ price | money }}
+
+      {% if price > 10000 %}
+        <strong>(дороже 100$)</strong>
+      {% else %}
+        (менее 100$)
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% comment %} Обычное условие внутри цикла {% endcomment %}
+
+{% comment %} Object / Capture{% endcomment %}
+
+<h1>{{ product.title }}</h1>
+
+{% capture html %}
+  <div>
+    <p>Hello {{ product.title }}</p>
+  </div>
+{% endcapture %}
+
+{{ html }}
+
+{% comment %} unless (это отрицание как !, то есть !product.tags contains 'Snow') {% endcomment %}
+
+{% unless product.tags contains 'Snow' %}
+  <p>unless really work</p>
+{% endunless %}
+
+{% comment %} =-----------------LOGIK OPERATOR----------------= {% endcomment %}
+
+{% if product.title contains 'Snowboard' and product.price < 1500 %}
+  <p>and worker</p>
+{% endif %}
+
+{% if product.title contains 'Snowboard' or product.price > 1500 %}
+  <p>or worker</p>
+{% endif %}
+
+{% comment %} Это условие не работает и читается как {% if product.title contains 'Snowboard' or (product.type == 'snowboard' and product.price < 100) %} {% endcomment %}
+
+{% comment %}
+  Это условие не работает, ликвид его читает:
+  --------------------------------------------------------
+  product.title contains 'Snowboard'
+    OR
+  ( product.type == 'snowboard' AND product.price < 2000 )
+  --------------------------------------------------------
+  {% if product.title contains 'Snowboard' or product.type == 'snowboard' and product.price < 100 %}
+    <p>or worker and (or / and)</p>
+  {% endif %}
+{% endcomment %}
+
+{% assign is_snowboard = false %}
+
+{% if product.title contains 'Snowboard' or product.type == 'snowboard' %}
+  {% assign is_snowboard = true %}
+{% endif %}
+
+{% if is_snowboard and product.price < 2000 %}
+  <p>or worker and (or / and)</p>
+{% endif %}
+
+{% comment %} =-----------------SWICH | CASE TAG----------------= {% endcomment %}
+
+{% comment %} Будет отображаться везде {% endcomment %}
+{% comment %}
+  {% case product.type %}
+    {% when 'snowboard' %}
+      <p>Yeah case work its SnowBoard</p>
+    {% when 'accessories' %}
+      <p>Yeah case work its Wax</p>
+    {% when 'giftcard' %}
+      <p>Yeah case work its Gift Card</p>
+    {% else %}
+      <p>No type product on Swich Case</p>
+  {% endcase %}
+{% endcomment %}
+
+{% comment %} Делаем проверку чтоб выводить на стр. только где есть тип продукта  {% endcomment %}
+{% if product.type %}
+  {% case product.type %}
+    {% when 'snowboard' %}
+      <p>Yeah case work its SnowBoard</p>
+    {% when 'accessories' %}
+      <p>Yeah case work its Wax</p>
+    {% when 'giftcard' %}
+      <p>Yeah case work its Gift Card</p>
+    {% else %}
+      <p>No type product on Swich Case</p>
+  {% endcase %}
+{% endif %}
+
+{% comment %} =-----------------LOOPING----------------= {% endcomment %}
+<h1>LOOPING</h1>
+
+{% for product in collection.products %}
+  <p
+    style="
+      {% if forloop.first %}
+        color: green
+      {% elsif forloop.last %}
+        color: orange
+      {% endif %}
+    "
+  >
+    {{ forloop.index }}
+    {{ product.title }}
+  </p>
+  {% if product.tags.size > 0 %}
+    <h2>Tags</h2>
+    <ul>
+      {% for tag in product.tags %}
+        <li>
+          {{ forloop.parentloop.index }}
+          {{ tag }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endfor %}
