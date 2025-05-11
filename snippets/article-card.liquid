@@ -104,8 +104,6 @@
                 {%- endif -%}
               </div>
             {%- endif -%}
-
-            <a href="{{ article.url }}" class="link"> Read more </a>
           </div>
           {%- if show_badge -%}
             <div class="card__badge {{ settings.badge_position }}">
@@ -152,6 +150,8 @@
           </div>
         {%- endif -%}
       </div>
+
+      <a href="{{ article.url }}" class="link"> Read more </a>
     </div>
   </div>
 {%- endif -%}
